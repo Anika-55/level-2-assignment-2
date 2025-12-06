@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes";
 import carRoutes from "./routes/carRoutes";
 import vehicleRoutes from "./routes/vehicle.routes";
 import userRoutes from "./routes/user.routes";
+import bookingRoutes from "./routes/booking.route";
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 
@@ -20,6 +21,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/cars", carRoutes);
 app.use("/api/v1/vehicles", vehicleRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/bookings", bookingRoutes);
 
 // DB Connection
 export const pool = new Pool({

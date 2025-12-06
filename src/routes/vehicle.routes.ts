@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { auth, adminOnly } from "../middlewares/auth";
 import {
   createVehicle,
   getAllVehicles,
@@ -7,17 +8,15 @@ import {
   deleteVehicle
 } from "../controllers/vehicle.controller";
 
-import { auth, adminOnly } from "../middlewares/auth";
-
 const router = Router();
 
-// Public
+// Public routes
 router.get("/", getAllVehicles);
-router.get("/:id", getVehicleById);
+router.get("/:vehicleId", getVehicleById);
 
-// Admin only
+// Admin routes
 router.post("/", auth, adminOnly, createVehicle);
-router.put("/:id", auth, adminOnly, updateVehicle);
-router.delete("/:id", auth, adminOnly, deleteVehicle);
+router.put("/:vehicleId", auth, adminOnly, updateVehicle);
+router.delete("/:vehicleId", auth, adminOnly, deleteVehicle);
 
 export default router;

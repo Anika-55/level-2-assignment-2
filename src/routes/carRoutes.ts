@@ -1,18 +1,13 @@
-import express from "express";
-import {
-    addCar,
-    getAllCars,
-    getCarById,
-    updateCar,
-    deleteCar,
-} from "../controllers/carController";
+import { Router } from "express";
+import { auth } from "../middlewares/auth";
+import { addCar, getAllCars, getCarById, updateCar, deleteCar } from "../controllers/carController";
 
-const router = express.Router();
+const router = Router();
 
-router.post("/", addCar); // TODO: Add admin middleware later
-router.get("/", getAllCars);
-router.get("/:id", getCarById);
-router.put("/:id", updateCar); // protected later
-router.delete("/:id", deleteCar); // protected later
+router.post("/", auth, addCar);          // admin only in controller
+router.get("/", auth, getAllCars);       // logged-in users
+router.get("/:id", auth, getCarById);    // logged-in users
+router.put("/:id", auth, updateCar);     // admin only
+router.delete("/:id", auth, deleteCar);  // admin only
 
 export default router;
