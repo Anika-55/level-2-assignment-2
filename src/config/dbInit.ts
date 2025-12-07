@@ -33,17 +33,17 @@ export const initDB = async () => {
     // ----------------- BOOKINGS TABLE -----------------
     await pool.query(`
       CREATE TABLE IF NOT EXISTS bookings (
-        id SERIAL PRIMARY KEY,
-        customer_id INT REFERENCES users(id) ON DELETE CASCADE,
-        car_id INT REFERENCES cars(id) ON DELETE CASCADE,
-        rent_start_date DATE NOT NULL,
-        rent_end_date DATE NOT NULL,
-        total_price FLOAT NOT NULL,
-        status VARCHAR(20) DEFAULT 'active',
-        created_at TIMESTAMP DEFAULT NOW(),
-        updated_at TIMESTAMP DEFAULT NOW()
-      );
-    `);
+    id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES users(id) ON DELETE CASCADE,
+    vehicle_id INT REFERENCES cars(id) ON DELETE CASCADE,
+    rent_start_date DATE NOT NULL,
+    rent_end_date DATE NOT NULL,
+    total_price FLOAT NOT NULL,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+  `);
 
     console.log("📌 Database initialized successfully! Tables are ready.");
 

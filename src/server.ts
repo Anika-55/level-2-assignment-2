@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { initDB } from "./config/dbInit";
 import authRoutes from "./routes/authRoutes";
-import carRoutes from "./routes/carRoutes";
+import carRoutes from "./routes/car.routes";
 import vehicleRoutes from "./routes/vehicle.routes";
 import userRoutes from "./routes/user.routes";
 import bookingRoutes from "./routes/booking.route";
@@ -28,12 +28,11 @@ export const pool = new Pool({
     connectionString: process.env.CONNECTION_STR
 });
 
-// Test API
+
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World! 🚗 Car Rental API Running!');
 });
 
-// Start server
 app.listen(port, async () => {
     await initDB();
     console.log(`🚀 Server running: http://localhost:${port}`);
