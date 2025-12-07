@@ -4,6 +4,8 @@ import { pool } from "../config/db";
 
 // Create a booking
 export const createBooking = async (req: AuthRequest, res: Response) => {
+  if (!req.user) return res.status(401).json({ success: false, message: "Not authenticated" });
+
   const { vehicle_id, rent_start_date, rent_end_date } = req.body;
   const customer_id = req.user.id;
 
@@ -44,17 +46,13 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
     );
 
     // 5️⃣ Update vehicle status to "booked"
-    await pool.query(
-      "UPDATE vehicles SET availability_status='booked' WHERE id=$1",
-      [vehicle_id]
-    );
+    await pool.query("UPDATE vehicles SET availability_status='booked' WHERE id=$1", [vehicle_id]);
 
     res.status(201).json({
       success: true,
       message: "Booking created successfully",
       data: bookingResult.rows[0]
     });
-
   } catch (err: any) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -62,6 +60,8 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
 
 // Get bookings
 export const getBookings = async (req: AuthRequest, res: Response) => {
+  if (!req.user) return res.status(401).json({ success: false, message: "Not authenticated" });
+
   try {
     let query = `
       SELECT b.*, u.name AS customer_name, v.vehicle_name, v.type, v.registration_number, v.daily_rent_price
@@ -69,6 +69,7 @@ export const getBookings = async (req: AuthRequest, res: Response) => {
       JOIN users u ON b.customer_id=u.id
       JOIN vehicles v ON b.vehicle_id=v.id
     `;
+
     if (req.user.role === "customer") {
       query += ` WHERE b.customer_id=${req.user.id}`;
     }
@@ -82,6 +83,8 @@ export const getBookings = async (req: AuthRequest, res: Response) => {
 
 // Update booking
 export const updateBooking = async (req: AuthRequest, res: Response) => {
+  if (!req.user) return res.status(401).json({ success: false, message: "Not authenticated" });
+
   const { bookingId } = req.params;
   const { status } = req.body;
 
@@ -103,7 +106,7 @@ export const updateBooking = async (req: AuthRequest, res: Response) => {
       }
     }
 
-    // Admin can update status to "returned"
+    // Admin can only mark as returned or cancelled
     if (req.user.role === "admin" && status !== "returned" && status !== "cancelled") {
       return res.status(400).json({ success: false, message: "Invalid status update" });
     }
@@ -113,10 +116,7 @@ export const updateBooking = async (req: AuthRequest, res: Response) => {
 
     // Update vehicle availability
     if (status === "cancelled" || status === "returned") {
-      await pool.query(
-        "UPDATE vehicles SET availability_status='available' WHERE id=$1",
-        [booking.vehicle_id]
-      );
+      await pool.query("UPDATE vehicles SET availability_status='available' WHERE id=$1", [booking.vehicle_id]);
     }
 
     res.status(200).json({
@@ -124,7 +124,6 @@ export const updateBooking = async (req: AuthRequest, res: Response) => {
       message: status === "cancelled" ? "Booking cancelled successfully" : "Booking marked as returned",
       data: { ...booking, status }
     });
-
   } catch (err: any) {
     res.status(500).json({ success: false, message: err.message });
   }
