@@ -1,14 +1,16 @@
 import { Router } from "express";
+import { auth } from "../middlewares/auth";
 import { getAllUsers, updateUser, deleteUser } from "../controllers/user.controller";
-import { auth, adminOnly } from "../middlewares/auth";
 
 const router = Router();
 
-// Admin only
-router.get("/", auth, adminOnly, getAllUsers);
-router.delete("/:userId", auth, adminOnly, deleteUser);
+// GET all users (Admin only)
+router.get("/", auth, getAllUsers);
 
-// Admin or own profile
+// UPDATE user (Admin or user themselves)
 router.put("/:userId", auth, updateUser);
+
+// DELETE user (Admin only)
+router.delete("/:userId", auth, deleteUser);
 
 export default router;

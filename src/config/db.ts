@@ -8,7 +8,6 @@ export const pool = new Pool({
     connectionString: process.env.CONNECTION_STR
 });
 
-// ✅ Test connection
 pool.connect()
     .then(() => console.log("✅ PostgreSQL connected"))
-    .catch(err => console.error("❌ DB connection failed:", err));
+    .catch(err => console.error(" DB connection failed:", err));

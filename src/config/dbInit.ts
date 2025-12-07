@@ -16,7 +16,6 @@ export const initDB = async () => {
       );
     `);
 
-    // ----------------- CARS TABLE -----------------
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cars (
         id SERIAL PRIMARY KEY,
@@ -45,9 +44,9 @@ export const initDB = async () => {
 );
   `);
 
-    console.log("📌 Database initialized successfully! Tables are ready.");
+    console.log(" Database initialized successfully! Tables are ready.");
 
   } catch (error) {
-    console.error("❌ Error initializing database:", error);
+    console.error(" Error initializing database:", error);
   }
 };
